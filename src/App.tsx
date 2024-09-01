@@ -1,34 +1,87 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from 'react'
+import type { Schema } from '../amplify/data/resource'
+import { generateClient } from 'aws-amplify/data'
+
+const client = generateClient<Schema>()
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [messages, setMessages] = useState<Schema['Message']['type'][]>([])
+  const [formState, setFormState] = useState({ name: '', content: '' })
+
+  useEffect(() => {
+    const sub = client.models.Message.observeQuery().subscribe({
+      next: ({ items }) => {
+        setMessages([...items])
+      },
+    })
+
+    return () => sub.unsubscribe()
+  }, [])
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    await client.models.Message.create({
+      name: formState.name,
+      content: formState.content,
+    })
+    setFormState({ name: '', content: '' })
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <div className="container mt-5">
+      <header className="text-center mb-4">
+        <img
+          src="/happybirthday.webp"
+          alt="Happy Birthday"
+          height="250px"
+          className="rounded-circle shadow-lg"
+        />
+        <h1 className="display-4 bree-serif-regular text-white">
+          Happy Birthday Nicole!
+        </h1>
+      </header>
+
+      <form className="mb-5" onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Your Name"
+            required
+            value={formState.name}
+            onChange={(e) =>
+              setFormState({ ...formState, name: e.target.value })
+            }
+          />
+        </div>
+        <div className="mb-3">
+          <textarea
+            className="form-control"
+            placeholder="Your Birthday Message"
+            rows={3}
+            required
+            value={formState.content}
+            onChange={(e) =>
+              setFormState({ ...formState, content: e.target.value })
+            }
+          ></textarea>
+        </div>
+        <button type="submit" className="btn btn-primary">
+          Submit
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      </form>
+
+      <div className="message-board">
+        {messages.map((message) => (
+          <div key={message.id} className="card mb-3">
+            <div className="card-body">
+              <h5 className="card-title">{message.name}</h5>
+              <p className="card-text">{message.content}</p>
+            </div>
+          </div>
+        ))}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 
