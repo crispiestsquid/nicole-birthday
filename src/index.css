@@ -5,10 +5,30 @@
 }
 
 body {
+  font-family: 'Quicksand', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
   background: rgb(252, 61, 145);
+  background: linear-gradient(166deg, #fc3d91 0%, #77b5fe 100%);
+}
+
+.fancy-btn {
+  background: rgb(119, 181, 254);
   background: linear-gradient(
-    166deg,
-    rgba(252, 61, 145, 1) 0%,
-    rgba(119, 181, 254, 1) 100%
+    90deg,
+    rgba(119, 181, 254, 1) 25%,
+    rgba(252, 61, 145, 1) 100%
+  );
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease; /* Smooth transition */
+}
+
+.fancy-btn:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(89, 151, 224, 1) 25%,
+    rgba(222, 31, 115, 1) 100%
   );
 }
