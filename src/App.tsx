@@ -126,7 +126,7 @@ function App() {
                 className="modal-header"
                 style={{ backgroundColor: '#fc3d91' }}
               >
-                <h5 className="modal-title text-white">
+                <h5 className="modal-title text-white fw-bolder">
                   Send Your Birthday Message
                 </h5>
                 <button
@@ -163,7 +163,7 @@ function App() {
                   </div>
                   <button
                     type="submit"
-                    className="fancy-btn py-2 rounded shadow-sm text-white fw-bold w-100"
+                    className="fancy-btn py-2 rounded shadow-sm text-white fs-5 fw-bolder w-100"
                     disabled={isSubmitting}
                   >
                     Send Birthday Message
